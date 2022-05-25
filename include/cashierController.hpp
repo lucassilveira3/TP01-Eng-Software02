@@ -3,9 +3,16 @@
 
 class CashierController{
     public:
+        CashierController();
+        ~CashierController();
 
+        void run();
+        void openSale();
+        void finishSale();
+        void addItem();
+        void removeItem();
     private:
-    
+
 };
 
 #endif
