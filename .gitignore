@@ -1,0 +1,4 @@
+*.o
+*.db
+tp01
+.vscode

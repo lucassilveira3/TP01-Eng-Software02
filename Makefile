@@ -1,24 +1,29 @@
 CC= g++
-CFLAGS= -Wall -c
+CFLAGS= -Wall
 INC= -I include/
+LIB= -l sqlite3
+EXEC_NAME= tp01
 
-# tp01: main.cpp cashierController.o mainController.o managerController.o reportModeController.o
-tp01: main.cpp cashierController.o managerController.o reportModeController.o
-#	$(CC) main.cpp cashierController.o mainController.o managerController.o reportModeController.o -o tp01
-	$(CC) main.cpp cashierController.o managerController.o reportModeController.o -o tp01
+all: build
+
+build: main.o cashierController.o managerController.o reportModeController.o
+	$(CC) $(CFLAGS) $^ -o $(EXEC_NAME) $(LIB)
 	
+main.o: main.cpp
+	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
+
 cashierController.o: source/cashierController.cpp
-	$(CC) $(CFLAGS) $(INC) source/cashierController.cpp
+	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
 	
 # mainController.o: source/mainController.cpp
 # 	$(CC) $(CFLAGS) $(INC) source/mainController.cpp
 	
 managerController.o: source/managerController.cpp
-	$(CC) $(CFLAGS) $(INC) source/managerController.cpp
+	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
 	
 reportModeController.o: source/reportModeController.cpp
-	$(CC) $(CFLAGS) $(INC) source/reportModeController.cpp
-	
+	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
+
 run:
 	./tp01
 	
