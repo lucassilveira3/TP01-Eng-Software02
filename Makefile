@@ -24,6 +24,9 @@ managerController.o: source/managerController.cpp
 reportModeController.o: source/reportModeController.cpp
 	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
 
+databaseDriver.o: source/databaseDriver.cpp
+	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
+
 run:
 	./tp01
 	

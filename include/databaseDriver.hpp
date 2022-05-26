@@ -1,0 +1,32 @@
+#ifndef DATABASE_DRIVER_H
+#define DATABASE_DRIVER_H
+#include <sqlite3.h>
+#include <iostream>
+#include <stdexcept>
+
+using std::string;
+
+class DatabaseException : public std::exception {
+    public:
+        DatabaseException(string message, int error_code, string sql_message);
+        virtual const char* what() const noexcept override;
+        int error_code();
+        string sql_message();
+        virtual ~DatabaseException() override = default;
+    private:
+        int error_code_;
+        string display_message_, custom_message_, sql_message_;
+};
+
+class DatabaseDriver {
+    public:
+        DatabaseDriver() = default;
+        void connect(string database_path);
+        void execute(string sql_statement);
+        void close_connection();
+        ~DatabaseDriver();
+    private:
+        sqlite3* db_handle_;
+};
+
+#endif
