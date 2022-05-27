@@ -31,9 +31,12 @@ void DatabaseConnection::connect(string database_path) {
 }
 
 /* 
-    Auxiliary struct to help in the processing of the rows returned by the 
+    Auxiliary struct used to pass parameters to the row processing method, called
+    by sqlite3 for every row returned by the database for the given query. This
+    struct is used to control the operation of the processing function and to
+    store the data after the processing.
 */
-struct RowProcessingData {
+struct RowProcessingParams {
     int row_number;
     bool first_call;
     vector<string>& column_names;
@@ -45,9 +48,9 @@ QueryResults DatabaseConnection::execute(string sql_statement) {
     char* error_message = nullptr;
     vector<string> column_names;
     vector<unordered_map<string, string>> rows;
-    RowProcessingData auxiliary_data{0, true, column_names, rows};
+    RowProcessingParams params{0, true, column_names, rows};
     int status_code = sqlite3_exec(db_handle_, sql_statement.c_str(),
-        DatabaseConnection::process_result_row, (void*)&auxiliary_data, &error_message);
+        DatabaseConnection::process_result_row, (void*)&params, &error_message);
     string status_message;
     if(status_code != SQLITE_OK) {
         status_message = error_message;
@@ -72,24 +75,24 @@ DatabaseConnection::~DatabaseConnection() {
 
 
 int DatabaseConnection::process_result_row(
-    void* processing_data,
+    void* processing_params,
     int num_columns,
     char** row_data,
     char** column_names
 ) {
-    RowProcessingData* auxiliary_data = (RowProcessingData*)processing_data;
+    RowProcessingParams* params = (RowProcessingParams*)processing_params;
     // We should only fill the column names array on the first call to the function
-    if(auxiliary_data->first_call) {
+    if(params->first_call) {
         for(int i = 0; i < num_columns; i++) {
-            auxiliary_data->column_names.emplace_back(column_names[i]);
+            params->column_names.emplace_back(column_names[i]);
         }
-        auxiliary_data->first_call = false;
+        params->first_call = false;
     }
     unordered_map<string, string> row;
     for(int i = 0; i < num_columns; i++) {
         row.emplace(column_names[i], (row_data[i] ? row_data[i] : "NULL"));
     }
-    auxiliary_data->result_rows.emplace_back(std::move(row));
-    auxiliary_data->row_number++;
+    params->result_rows.emplace_back(std::move(row));
+    params->row_number++;
     return 0;
 }

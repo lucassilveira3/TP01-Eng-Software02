@@ -27,7 +27,7 @@ class DatabaseConnection {
         void close_connection();
         ~DatabaseConnection();
     private:
-        static int process_result_row(void* processing_data, int num_columns,
+        static int process_result_row(void* processing_params, int num_columns,
             char** row_data, char** column_names);
 
         sqlite3* db_handle_;
