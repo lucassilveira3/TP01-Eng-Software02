@@ -1,7 +1,7 @@
 #include "queryResults.hpp"
 #include <sqlite3.h>
 
-QueryResults::QueryResults(int status_code, int num_columns, vector<map<string, string>>&& rows) :
+QueryResults::QueryResults(int status_code, int num_columns, vector<unordered_map<string, string>>&& rows) :
     status_code_(status_code), num_columns_(num_columns), rows_(rows) { }
 
 bool QueryResults::success() {
@@ -22,10 +22,10 @@ int QueryResults::num_rows() {
 int QueryResults::num_columns() {
     return num_columns_;
 }
-vector<map<string, string>>& QueryResults::rows() {
+vector<unordered_map<string, string>>& QueryResults::rows() {
     return rows_;
 }
 
-const vector<map<string, string>>& QueryResults::rows() const {
+const vector<unordered_map<string, string>>& QueryResults::rows() const {
     return rows_;
 }

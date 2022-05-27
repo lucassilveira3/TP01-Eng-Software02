@@ -35,13 +35,13 @@ void DatabaseConnection::connect(string database_path) {
 */
 struct RowProcessingData {
     int row_number, num_columns;
-    vector<map<string, string>>& result_rows;
+    vector<unordered_map<string, string>>& result_rows;
 };
 
 
 QueryResults DatabaseConnection::execute(string sql_statement) {
     char* error_message = nullptr;
-    vector<map<string, string>> rows;
+    vector<unordered_map<string, string>> rows;
     RowProcessingData auxiliary_data{0, 0, rows};
     int status = sqlite3_exec(db_handle_, sql_statement.c_str(),
         DatabaseConnection::process_result_row, (void*)&auxiliary_data, &error_message);
@@ -69,7 +69,7 @@ int DatabaseConnection::process_result_row(
 ) {
     RowProcessingData* auxiliary_data = (RowProcessingData*)processing_data;
     auxiliary_data->num_columns = num_columns;
-    map<string, string> row;
+    unordered_map<string, string> row;
     for(int i = 0; i < num_columns; i++) {
         row.emplace(column_names[i], (row_data[i] ? row_data[i] : "NULL"));
     }
