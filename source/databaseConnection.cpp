@@ -34,18 +34,28 @@ void DatabaseConnection::connect(string database_path) {
     Auxiliary struct to help in the processing of the rows returned by the 
 */
 struct RowProcessingData {
-    int row_number, num_columns;
+    int row_number;
+    bool first_call;
+    vector<string>& column_names;
     vector<unordered_map<string, string>>& result_rows;
 };
 
 
 QueryResults DatabaseConnection::execute(string sql_statement) {
     char* error_message = nullptr;
+    vector<string> column_names;
     vector<unordered_map<string, string>> rows;
-    RowProcessingData auxiliary_data{0, 0, rows};
-    int status = sqlite3_exec(db_handle_, sql_statement.c_str(),
+    RowProcessingData auxiliary_data{0, true, column_names, rows};
+    int status_code = sqlite3_exec(db_handle_, sql_statement.c_str(),
         DatabaseConnection::process_result_row, (void*)&auxiliary_data, &error_message);
-    return QueryResults(status, auxiliary_data.num_columns, std::move(rows));
+    string status_message;
+    if(status_code != SQLITE_OK) {
+        status_message = error_message;
+        sqlite3_free(error_message);
+    }else {
+        status_message = "OK";
+    }
+    return QueryResults(status_code, status_message, std::move(column_names), std::move(rows));
 }
 
 void DatabaseConnection::close_connection() {
@@ -68,7 +78,13 @@ int DatabaseConnection::process_result_row(
     char** column_names
 ) {
     RowProcessingData* auxiliary_data = (RowProcessingData*)processing_data;
-    auxiliary_data->num_columns = num_columns;
+    // We should only fill the column names array on the first call to the function
+    if(auxiliary_data->first_call) {
+        for(int i = 0; i < num_columns; i++) {
+            auxiliary_data->column_names.emplace_back(column_names[i]);
+        }
+        auxiliary_data->first_call = false;
+    }
     unordered_map<string, string> row;
     for(int i = 0; i < num_columns; i++) {
         row.emplace(column_names[i], (row_data[i] ? row_data[i] : "NULL"));

@@ -1,8 +1,13 @@
 #include "queryResults.hpp"
 #include <sqlite3.h>
 
-QueryResults::QueryResults(int status_code, int num_columns, vector<unordered_map<string, string>>&& rows) :
-    status_code_(status_code), num_columns_(num_columns), rows_(rows) { }
+QueryResults::QueryResults(
+    int status_code,
+    string status_message,
+    vector<string>&& columns,
+    vector<unordered_map<string, string>>&& rows
+) : status_code_(status_code), status_message_(status_message),
+    column_names_(columns), rows_(rows) { }
 
 bool QueryResults::success() {
     return status_code_ == SQLITE_OK;
@@ -16,12 +21,21 @@ int QueryResults::status_code() {
     return status_code_;
 }
 
+string QueryResults::status_message() {
+    return status_message_;
+}
+
 int QueryResults::num_rows() {
     return rows_.size();
 }
 int QueryResults::num_columns() {
-    return num_columns_;
+    return column_names_.size();
 }
+
+const vector<string>& QueryResults::column_names() {
+    return column_names_;
+}
+
 vector<unordered_map<string, string>>& QueryResults::rows() {
     return rows_;
 }
