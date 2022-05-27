@@ -9,7 +9,7 @@ all: build
 build: main.o cashierController.o managerController.o reportModeController.o databaseConnection.o queryResults.o
 	$(CC) $(CFLAGS) $^ -o $(EXEC_NAME) $(LIB)
 	
-main.o: main.cpp
+main.o: source/main.cpp
 	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
 
 cashierController.o: source/cashierController.cpp
