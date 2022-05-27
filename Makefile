@@ -6,7 +6,7 @@ EXEC_NAME= tp01
 
 all: build
 
-build: main.o cashierController.o managerController.o reportModeController.o databaseDriver.o queryResults.o
+build: main.o cashierController.o managerController.o reportModeController.o databaseConnection.o queryResults.o
 	$(CC) $(CFLAGS) $^ -o $(EXEC_NAME) $(LIB)
 	
 main.o: main.cpp
@@ -24,7 +24,7 @@ managerController.o: source/managerController.cpp
 reportModeController.o: source/reportModeController.cpp
 	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
 
-databaseDriver.o: source/databaseDriver.cpp
+databaseConnection.o: source/databaseConnection.cpp
 	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
 
 queryResults.o: source/queryResults.cpp

@@ -1,4 +1,4 @@
-#include "databaseDriver.hpp"
+#include "databaseConnection.hpp"
 #include <sstream>
 
 DatabaseException::DatabaseException(string message, int error_code, string sql_message) {
@@ -22,7 +22,7 @@ string DatabaseException::sql_message() {
     return sql_message_;
 }
 
-void DatabaseDriver::connect(string database_path) {
+void DatabaseConnection::connect(string database_path) {
     int status_code = sqlite3_open(database_path.c_str(), &db_handle_);
     if(status_code != SQLITE_OK) {
         throw DatabaseException("Failed to open database file \"" + database_path + "\"!",
@@ -39,16 +39,16 @@ struct RowProcessingData {
 };
 
 
-QueryResults DatabaseDriver::execute(string sql_statement) {
+QueryResults DatabaseConnection::execute(string sql_statement) {
     char* error_message = nullptr;
     vector<map<string, string>> rows;
     RowProcessingData auxiliary_data{0, 0, rows};
     int status = sqlite3_exec(db_handle_, sql_statement.c_str(),
-        DatabaseDriver::process_result_row, (void*)&auxiliary_data, &error_message);
+        DatabaseConnection::process_result_row, (void*)&auxiliary_data, &error_message);
     return QueryResults(status, auxiliary_data.num_columns, std::move(rows));
 }
 
-void DatabaseDriver::close_connection() {
+void DatabaseConnection::close_connection() {
     int status_code = sqlite3_close(db_handle_);
     if(status_code != SQLITE_OK) {
         throw DatabaseException("Failed to close database connection!",
@@ -56,12 +56,12 @@ void DatabaseDriver::close_connection() {
     }
 }
 
-DatabaseDriver::~DatabaseDriver() {
+DatabaseConnection::~DatabaseConnection() {
     sqlite3_close(db_handle_);
 }
 
 
-int DatabaseDriver::process_result_row(
+int DatabaseConnection::process_result_row(
     void* processing_data,
     int num_columns,
     char** row_data,

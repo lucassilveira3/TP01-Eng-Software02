@@ -19,13 +19,13 @@ class DatabaseException : public std::exception {
         string display_message_, custom_message_, sql_message_;
 };
 
-class DatabaseDriver {
+class DatabaseConnection {
     public:
-        DatabaseDriver() = default;
+        DatabaseConnection() = default;
         void connect(string database_path);
         QueryResults execute(string sql_statement);
         void close_connection();
-        ~DatabaseDriver();
+        ~DatabaseConnection();
     private:
         static int process_result_row(void* processing_data, int num_columns,
             char** row_data, char** column_names);
