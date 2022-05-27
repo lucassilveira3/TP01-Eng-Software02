@@ -3,10 +3,9 @@
 #include <sqlite3.h>
 #include <iostream>
 #include <stdexcept>
-#include <vector>
-#include <map>
+#include "queryResults.hpp"
 
-using std::string, std::vector, std::map;
+using std::string;
 
 class DatabaseException : public std::exception {
     public:
@@ -18,21 +17,6 @@ class DatabaseException : public std::exception {
     private:
         int error_code_;
         string display_message_, custom_message_, sql_message_;
-};
-
-class QueryResults {
-    public:
-        QueryResults(int status_code, int num_columns_, vector<map<string, string>>&& rows);
-        bool success();
-        bool has_rows();
-        int status_code();
-        int num_rows();
-        int num_columns();
-        vector<map<string, string>>& rows();
-        const vector<map<string, string>>& rows() const;
-    private:
-        int status_code_, num_columns_;
-        vector<map<string, string>> rows_;
 };
 
 class DatabaseDriver {
