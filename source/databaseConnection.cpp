@@ -1,5 +1,8 @@
 #include "databaseConnection.hpp"
 #include <sstream>
+#include <cstring>
+#include <cstdarg>
+#include "dateTime.hpp"
 
 DatabaseException::DatabaseException(string message, int error_code, string sql_message) {
     custom_message_ = message;
@@ -20,6 +23,76 @@ int DatabaseException::error_code() {
 
 string DatabaseException::sql_message() {
     return sql_message_;
+}
+
+
+string DatabaseConnection::prepareStatement(const string& sql_statement,
+     const string& parameter_types, ...) {
+        int num_parameters = parameter_types.size();
+        sqlite3_stmt* statement;
+        std::va_list parameters;
+        va_start(parameters, num_parameters);
+        int status_code = sqlite3_prepare_v2(db_handle_, sql_statement.c_str(), 
+            sql_statement.length(), &statement, nullptr);
+        if(status_code != SQLITE_OK) {
+            throw DatabaseException("Failed to prepare SQL statement \"" + sql_statement + "\"",
+                status_code, sqlite3_errmsg(db_handle_));
+        }
+        for(int i = 0; i < num_parameters; i++) {
+            switch(parameter_types[i]) {
+                case 's': 
+                {
+                    const char* parameter = va_arg(parameters, const char*);
+                    int status_code = sqlite3_bind_text(statement, i + 1,
+                        parameter, strlen(parameter), SQLITE_STATIC);
+                    if(status_code != SQLITE_OK) {
+                        throw DatabaseException("Failed to bind string parameter to the SQL statement!",
+                            status_code, sqlite3_errmsg(db_handle_));
+                    }
+                    break;
+                }
+                case 'i':
+                {
+                    int parameter = va_arg(parameters, int);
+                    int status_code = sqlite3_bind_int(statement, i + 1, parameter);
+                    if(status_code != SQLITE_OK) {
+                        throw DatabaseException("Failed to bind integer parameter to the SQL statement!",
+                            status_code, sqlite3_errmsg(db_handle_));
+                    }
+                    break;
+                }
+                case 'd':
+                {
+                    double parameter = va_arg(parameters, double);
+                    int status_code = sqlite3_bind_double(statement, i + 1, parameter);
+                    if(status_code != SQLITE_OK) {
+                        throw DatabaseException("Failed to bind string parameter to the SQL statement!",
+                            status_code, sqlite3_errmsg(db_handle_));
+                    }
+                    break;
+                }
+                case 't':
+                {
+                    DateTime* parameter = va_arg(parameters, DateTime*);
+                    const string date_string = parameter->to_string();
+                    int status_code = sqlite3_bind_text(statement, i + 1,
+                        date_string.c_str(), date_string.size(), SQLITE_STATIC);
+                    break;
+                }
+                case 'n':
+                {
+                    int status_code = sqlite3_bind_null(statement, i + 1);
+                    if(status_code != SQLITE_OK) {
+                        throw DatabaseException("Failed to bind string parameter to the SQL statement!",
+                            status_code, sqlite3_errmsg(db_handle_));
+                    }
+                    break;
+                }
+                default: 
+                    throw std::runtime_error(string("Failed to bind SQL statement!\nAn invalid parameter type \"") + parameter_types[i] + "\" was provided!");
+            }
+        }
+        return string(sqlite3_expanded_sql(statement));
 }
 
 void DatabaseConnection::connect(string database_path) {

@@ -16,6 +16,7 @@ class DateTime {
         int month() const;
         int year() const;
         time_t timestamp() const;
+        // Returns the date and time on a string with the "YYYY/MM/DD - HH:MM:SS" format 
         string to_string() const;
     private:
         time_t time_stamp_;
