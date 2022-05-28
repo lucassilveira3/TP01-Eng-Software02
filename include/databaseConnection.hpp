@@ -39,6 +39,7 @@ class DatabaseConnection {
             is returned as a string
         */
         string prepareStatement(const string& sql_statement, const string& parameter_types, ...);
+        int lastIdInserted();
         void close_connection();
         ~DatabaseConnection();
     private:

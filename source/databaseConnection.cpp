@@ -138,6 +138,10 @@ QueryResults DatabaseConnection::execute(string sql_statement) {
     return QueryResults(status_code, status_message, std::move(column_names), std::move(rows));
 }
 
+int DatabaseConnection::lastIdInserted() {
+    return sqlite3_last_insert_rowid(db_handle_);
+}
+
 void DatabaseConnection::close_connection() {
     int status_code = sqlite3_close(db_handle_);
     if(status_code != SQLITE_OK) {
