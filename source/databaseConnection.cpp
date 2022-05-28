@@ -96,7 +96,9 @@ string DatabaseConnection::prepareStatement(const string& sql_statement,
                     throw std::runtime_error(string("Failed to bind SQL statement!\nAn invalid parameter type \"") + parameter_types[i] + "\" was provided!");
             }
         }
-        return string(sqlite3_expanded_sql(statement));
+        string resulting_sql = sqlite3_expanded_sql(statement);
+        sqlite3_finalize(statement);
+        return resulting_sql;
 }
 
 void DatabaseConnection::connect(string database_path) {
