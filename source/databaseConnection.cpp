@@ -130,8 +130,12 @@ QueryResults DatabaseConnection::execute(string sql_statement) {
         DatabaseConnection::process_result_row, (void*)&params, &error_message);
     string status_message;
     if(status_code != SQLITE_OK) {
-        status_message = error_message;
-        sqlite3_free(error_message);
+        if(error_message != nullptr) {
+            status_message = error_message;
+            sqlite3_free(error_message);
+        }else {
+            status_message = sqlite3_errmsg(db_handle_);
+        }
     }else {
         status_message = "OK";
     }
