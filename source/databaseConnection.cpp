@@ -31,7 +31,7 @@ string DatabaseConnection::prepareStatement(const string& sql_statement,
         int num_parameters = parameter_types.size();
         sqlite3_stmt* statement;
         std::va_list parameters;
-        va_start(parameters, num_parameters);
+        va_start(parameters, parameter_types);
         int status_code = sqlite3_prepare_v2(db_handle_, sql_statement.c_str(), 
             sql_statement.length(), &statement, nullptr);
         if(status_code != SQLITE_OK) {
@@ -66,7 +66,7 @@ string DatabaseConnection::prepareStatement(const string& sql_statement,
                     double parameter = va_arg(parameters, double);
                     int status_code = sqlite3_bind_double(statement, i + 1, parameter);
                     if(status_code != SQLITE_OK) {
-                        throw DatabaseException("Failed to bind string parameter to the SQL statement!",
+                        throw DatabaseException("Failed to bind double (real) parameter to the SQL statement!",
                             status_code, sqlite3_errmsg(db_handle_));
                     }
                     break;
@@ -77,13 +77,17 @@ string DatabaseConnection::prepareStatement(const string& sql_statement,
                     const string date_string = parameter->to_string();
                     int status_code = sqlite3_bind_text(statement, i + 1,
                         date_string.c_str(), date_string.size(), SQLITE_STATIC);
+                    if(status_code != SQLITE_OK) {
+                        throw DatabaseException("Failed to bind datetime parameter to the SQL statement!",
+                            status_code, sqlite3_errmsg(db_handle_));
+                    }
                     break;
                 }
                 case 'n':
                 {
                     int status_code = sqlite3_bind_null(statement, i + 1);
                     if(status_code != SQLITE_OK) {
-                        throw DatabaseException("Failed to bind string parameter to the SQL statement!",
+                        throw DatabaseException("Failed to bind null parameter to the SQL statement!",
                             status_code, sqlite3_errmsg(db_handle_));
                     }
                     break;
