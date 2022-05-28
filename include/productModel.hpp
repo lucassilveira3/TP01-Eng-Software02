@@ -9,6 +9,7 @@ using std::string, std::vector;
 class ProductModel {
     public:
         static ProductModel getById(DatabaseConnection& db_connection, int id);
+        // Returns the first product matching the given name on the database
         static ProductModel getByName(DatabaseConnection& db_connection, string name);
         static vector<ProductModel> getAll(DatabaseConnection& db_connection);
         static ProductModel createProduct(DatabaseConnection& db_connection,
