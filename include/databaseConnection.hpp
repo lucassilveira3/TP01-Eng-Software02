@@ -40,8 +40,11 @@ class DatabaseConnection {
         */
         string prepareStatement(const string& sql_statement, const string& parameter_types, ...);
         int lastIdInserted();
+        /* 
+            Closes the current DB connection and frees the allocated resources.
+            This method should always be called after finishing with the connection
+        */
         void close_connection();
-        ~DatabaseConnection();
     private:
         static int process_result_row(void* processing_params, int num_columns,
             char** row_data, char** column_names);

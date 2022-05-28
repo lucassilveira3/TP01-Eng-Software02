@@ -154,10 +154,6 @@ void DatabaseConnection::close_connection() {
     }
 }
 
-DatabaseConnection::~DatabaseConnection() {
-    sqlite3_close(db_handle_);
-}
-
 
 int DatabaseConnection::process_result_row(
     void* processing_params,
