@@ -76,7 +76,7 @@ ProductModel ProductModel::createProduct(
     string sql_statement = db_connection.prepareStatement(
         "INSERT INTO Products (name, price, amount) VALUES (?, ?, ?)",
         "sdi",
-        name,
+        name.c_str(),
         price,
         amount
     );
