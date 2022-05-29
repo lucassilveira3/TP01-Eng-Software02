@@ -1,26 +1,76 @@
-#include <iostream>
 #include "cashierController.hpp"
+#include <stdexcept>
 
-CashierController::CashierController() {}
+using std::runtime_error;
 
-CashierController::~CashierController() {}
-
-void CashierController::openSale() {
-
+CashierController CashierController::getById(DatabaseConnection& db_connection, int id) {
+    string sql_statement = db_connection.
+        prepareStatement("SELECT * FROM Prodcuts WHERE id=?", "i", id);
+    QueryResults result = db_connection.execute(sql_statement);
+    if(!result.success()) {
+        throw runtime_error("Failed to retrieve product with id=" + std::to_string(id) + "!\nDatabase error encountered: " + result.status_message());
+    }
+    if(result.num_rows() != 1) {
+        throw runtime_error("Error retrieving product with id=" + std::to_string(id) + "!\nNot enough rows returned by the database!");
+    }
+    // Processing the returned row
+    string name = result.rows()[0]["name"];
+    double price = std::stod(result.rows()[0]["price"]);
+    int amount = std::stoi(result.rows()[0]["amount"]);
+    return CashierController(id, name, price, amount, db_connection);
 }
 
-void CashierController::finishSale() {
-
+CashierController CashierController::getByName(DatabaseConnection& db_connection, string name) {
+    string sql_statement = db_connection.
+        prepareStatement("SELECT * FROM Prodcuts WHERE name=?", "s", name.c_str());
+    QueryResults result = db_connection.execute(sql_statement);
+    if(!result.success()) {
+        throw runtime_error("Failed to retrieve product with name=" + name + "!\nDatabase error encountered: " + result.status_message());
+    }
+    if(result.num_rows() != 1) {
+        throw runtime_error("Error retrieving product with name=" + name + "!\nNot enough rows returned by the database!");
+    }
+    // Processing the returned row
+    int id = std::stoi(result.rows()[0]["id"]);
+    double price = std::stod(result.rows()[0]["price"]);
+    int amount = std::stoi(result.rows()[0]["amount"]);
+    return CashierController(id, name, price, amount, db_connection);
 }
 
-void CashierController::addItem() {
-
+vector<CashierController> CashierController::getAll(DatabaseConnection& db_connection) {
+    QueryResults results = db_connection.execute("SELECT * FROM Products");
+    if(!results.success()) {
+        throw runtime_error("Failed to retrieve all products!\nDatabase error (code " + 
+            std::to_string(results.status_code()) + ") encountered: " + results.status_message());
+    }
+    if(!results.has_rows()) {
+        throw runtime_error("Error retrieving all products from the database!\nNo rows returned!");
+    }
+    // Processing the returned rows
+    vector<CashierController> products;
+    products.reserve(results.num_rows());
+    for(int i = 0; i < results.num_rows(); i++) {
+        int id = std::stoi(results.rows()[0]["id"]);
+        string name = results.rows()[0]["name"];
+        double price = std::stod(results.rows()[0]["price"]);
+        int amount = std::stoi(results.rows()[0]["amount"]);
+        products.emplace_back(CashierController(id, name, price, amount, db_connection));
+    }
+    return products;
 }
 
-void CashierController::removeItem() {
-
+int ProductModel::id() {
+    return id_;
 }
 
-void CashierController::registerSale() {
-    
+string ProductModel::name() {
+    return name_;
+}
+
+double ProductModel::price() {
+    return price_;
+}
+
+int ProductModel::amount() {
+    return amount_;
 }

@@ -11,13 +11,13 @@ class ManagerController{
         static ManagerController createProduct(DatabaseConnection& db_connection,
             string name, double price, int amount);
         static void removeProduct(DatabaseConnection& db_connection, int id);
-        void updatePrice(double new_price);
-        void updateAmount(int new_amount);
-        //void checkStock();
 		int id();
         string name();
         double price();
         int amount();
+        void updatePrice(double new_price);
+        void updateAmount(int new_amount);
+        //void checkStock();
     private:
 		ManagerController(int id, string name, double price, int amount,
             DatabaseConnection& db_connection);
