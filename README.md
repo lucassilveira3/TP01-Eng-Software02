@@ -4,7 +4,7 @@ Este repositório contém o código do Trabalho Prático 1 da disciplina de Enge
 
 ## Membros do Grupo
 
-- Lucas Silveira - Matrícula:
+- Lucas Silveira Martins da Costa - Matrícula: 2019431399
 - Pedro Dias Pires - Matrícula: 2019007040
 - Vitor Mafra - Matrícula:
 
