@@ -1,10 +1,10 @@
 # TP 1 - Engenharia de Software II
 
-Este repositório contém o código do Trabalho Prático 1 da disciplina de Engengaria de Software II, lecionada pelo professor André Hora, no primeiro semestre de 2022, no DCC - UFMG.
+Este repositório contém o código do Trabalho Prático 1 da disciplina de Engenharia de Software II, lecionada pelo professor André Hora, no primeiro semestre de 2022, no DCC - UFMG.
 
 ## Membros do Grupo
 
-- Lucas Silveira - Matrícula:
+- Lucas Silveira Martins da Costa - Matrícula: 2019431399
 - Pedro Dias Pires - Matrícula: 2019007040
 - Vitor Mafra - Matrícula:
 
