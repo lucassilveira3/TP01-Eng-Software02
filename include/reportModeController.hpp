@@ -6,7 +6,11 @@ class ReportModeController{
         ReportModeController();
         ~ReportModeController();
 
-        
+        void salesOnPeriod();
+        void mostSoldItems();
+        void mostRevenueContributorsItems();
+        void highestSalesDays();
+        void lowestSalesDays();
     private:
 
 };

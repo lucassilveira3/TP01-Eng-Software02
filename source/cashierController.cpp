@@ -5,10 +5,6 @@ CashierController::CashierController() {}
 
 CashierController::~CashierController() {}
 
-void CashierController::run() {
-
-}
-
 void CashierController::openSale() {
 
 }
@@ -23,4 +19,8 @@ void CashierController::addItem() {
 
 void CashierController::removeItem() {
 
+}
+
+void CashierController::registerSale() {
+    
 }
