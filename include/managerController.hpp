@@ -8,6 +8,9 @@ using std::string, std::vector;
 
 class ManagerController{
     public:
+    static ManagerController getById(DatabaseConnection& db_connection, int id);
+        // Returns the first product matching the given name on the database
+        static ManagerController getByName(DatabaseConnection& db_connection, string name);
         static ManagerController createProduct(DatabaseConnection& db_connection,
             string name, double price, int amount);
         static void removeProduct(DatabaseConnection& db_connection, int id);
