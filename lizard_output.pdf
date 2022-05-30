@@ -1,0 +1,95 @@
+================================================
+  NLOC    CCN   token  PARAM  length  location  
+------------------------------------------------
+       7      1     47      5       7 ProductModel::ProductModel@6-12@./source/productModel.cpp
+      15      3    165      2      16 ProductModel::getById@14-29@./source/productModel.cpp
+      15      3    164      2      16 ProductModel::getByName@31-46@./source/productModel.cpp
+      20      4    206      1      21 ProductModel::getAll@48-68@./source/productModel.cpp
+      20      2    105      4      20 ProductModel::createProduct@70-89@./source/productModel.cpp
+       9      2     82      2       9 ProductModel::removeProduct@91-99@./source/productModel.cpp
+       3      1     10      0       3 ProductModel::id@101-103@./source/productModel.cpp
+       3      1     10      0       3 ProductModel::name@105-107@./source/productModel.cpp
+       3      1     10      0       3 ProductModel::price@109-111@./source/productModel.cpp
+       3      1     10      0       3 ProductModel::amount@113-115@./source/productModel.cpp
+      11      2     88      1      11 ProductModel::rename@117-127@./source/productModel.cpp
+      12      2     84      1      12 ProductModel::updatePrice@129-140@./source/productModel.cpp
+      12      2     84      1      12 ProductModel::updateAmount@142-153@./source/productModel.cpp
+       7      1     47      5       7 ManagerController::ManagerController@6-12@./source/managerController.cpp
+      15      3    165      2      16 ManagerController::getById@14-29@./source/managerController.cpp
+      15      3    164      2      16 ManagerController::getByName@31-46@./source/managerController.cpp
+      20      2    105      4      20 ManagerController::createProduct@48-67@./source/managerController.cpp
+       9      2     82      2       9 ManagerController::removeProduct@69-77@./source/managerController.cpp
+       3      1     10      0       3 ManagerController::id@79-81@./source/managerController.cpp
+       3      1     10      0       3 ManagerController::name@83-85@./source/managerController.cpp
+       3      1     10      0       3 ManagerController::price@87-89@./source/managerController.cpp
+       3      1     10      0       3 ManagerController::amount@91-93@./source/managerController.cpp
+      12      2     84      1      12 ManagerController::updatePrice@95-106@./source/managerController.cpp
+      12      2     84      1      12 ManagerController::updateAmount@108-119@./source/managerController.cpp
+       3      1     16      0       3 DateTime::now@7-9@./source/dateTime.cpp
+       4      1     22      1       4 DateTime::DateTime@11-14@./source/dateTime.cpp
+       5      1     40      1       5 DateTime::DateTime@16-20@./source/dateTime.cpp
+       3      1     13      0       3 DateTime::day@22-24@./source/dateTime.cpp
+       3      1     15      0       3 DateTime::month@26-28@./source/dateTime.cpp
+       3      1     15      0       3 DateTime::year@30-32@./source/dateTime.cpp
+       3      1     11      0       3 DateTime::timestamp@34-36@./source/dateTime.cpp
+       5      1     32      0       5 DateTime::to_string@38-42@./source/dateTime.cpp
+      17      2    164      0      17 main@8-24@./source/main.cpp
+      15      3    165      2      16 CashierController::getById@6-21@./source/cashierController.cpp
+      15      3    164      2      16 CashierController::getByName@23-38@./source/cashierController.cpp
+      20      4    206      1      21 CashierController::getAll@40-60@./source/cashierController.cpp
+       3      1     10      0       3 ProductModel::id@62-64@./source/cashierController.cpp
+       3      1     10      0       3 ProductModel::name@66-68@./source/cashierController.cpp
+       3      1     10      0       3 ProductModel::price@70-72@./source/cashierController.cpp
+       3      1     10      0       3 ProductModel::amount@74-76@./source/cashierController.cpp
+       7      1     51      4       7 QueryResults::QueryResults@4-10@./source/queryResults.cpp
+       3      1     12      0       3 QueryResults::success@12-14@./source/queryResults.cpp
+       3      1     14      0       3 QueryResults::has_rows@16-18@./source/queryResults.cpp
+       3      1     10      0       3 QueryResults::status_code@20-22@./source/queryResults.cpp
+       3      1     10      0       3 QueryResults::status_message@24-26@./source/queryResults.cpp
+       3      1     14      0       3 QueryResults::num_rows@28-30@./source/queryResults.cpp
+       3      1     14      0       3 QueryResults::num_columns@31-33@./source/queryResults.cpp
+       3      1     10      0       3 QueryResults::column_names@35-37@./source/queryResults.cpp
+       3      1     10      0       3 QueryResults::rows@39-41@./source/queryResults.cpp
+       3      1     11      0       3 QueryResults::rows@43-45@./source/queryResults.cpp
+       8      1     72      3       8 DatabaseException::DatabaseException@7-14@./source/databaseConnection.cpp
+       3      1     16      0       3 DatabaseException::what@16-18@./source/databaseConnection.cpp
+       3      1     10      0       3 DatabaseException::error_code@20-22@./source/databaseConnection.cpp
+       3      1     10      0       3 DatabaseException::sql_message@24-26@./source/databaseConnection.cpp
+      74     13    437      3      74 DatabaseConnection::prepareStatement@29-102@./source/databaseConnection.cpp
+       7      2     49      1       7 DatabaseConnection::connect@104-110@./source/databaseConnection.cpp
+      20      3    139      1      20 DatabaseConnection::execute@126-145@./source/databaseConnection.cpp
+       3      1     13      0       3 DatabaseConnection::lastIdInserted@147-149@./source/databaseConnection.cpp
+       7      2     36      0       7 DatabaseConnection::close_connection@151-157@./source/databaseConnection.cpp
+      21      5    143      4      22 DatabaseConnection::process_result_row@160-181@./source/databaseConnection.cpp
+      10      1     69      0      10 printMenu@14-23@./source/mainController.cpp
+      13      5     37      0      14 selectCashierType@25-38@./source/mainController.cpp
+      16      1     94      0      16 createDatabase@40-55@./source/mainController.cpp
+      17      4     97      0      17 startDatabaseConnection@57-73@./source/mainController.cpp
+17 file analyzed.
+==============================================================
+NLOC    Avg.NLOC  AvgCCN  Avg.token  function_cnt    file
+--------------------------------------------------------------
+     17       0.0     0.0        0.0         0     ./include/dateTime.hpp
+     25       0.0     0.0        0.0         0     ./include/managerController.hpp
+     25       0.0     0.0        0.0         0     ./include/cashierController.hpp
+     29       0.0     0.0        0.0         0     ./include/databaseConnection.hpp
+     11       0.0     0.0        0.0         0     ./include/reportModeController.hpp
+     23       0.0     0.0        0.0         0     ./include/queryResults.hpp
+     27       0.0     0.0        0.0         0     ./include/productModel.hpp
+      4       0.0     0.0        0.0         0     ./include/mainController.hpp
+    136      10.2     1.9       81.9        13     ./source/productModel.cpp
+    105       9.3     1.7       70.1        11     ./source/managerController.cpp
+     32       3.6     1.0       20.5         8     ./source/dateTime.cpp
+     22      17.0     2.0      164.0         1     ./source/main.cpp
+     65       8.9     2.0       82.1         7     ./source/cashierController.cpp
+     36       3.4     1.0       15.6        10     ./source/queryResults.cpp
+    160      14.9     3.0       92.5        10     ./source/databaseConnection.cpp
+     64      14.0     2.8       74.2         4     ./source/mainController.cpp
+      0       0.0     0.0        0.0         0     ./source/reportModeController.cpp
+
+===============================================================================================================
+No thresholds exceeded (cyclomatic_complexity > 15 or length > 1000 or nloc > 1000000 or parameter_count > 100)
+==========================================================================================
+Total nloc   Avg.NLOC  AvgCCN  Avg.token   Fun Cnt  Warning cnt   Fun Rt   nloc Rt
+------------------------------------------------------------------------------------------
+       781       9.1     1.9       64.3       64            0      0.00    0.00
