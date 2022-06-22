@@ -1,6 +1,6 @@
 #ifndef DATABASE_DRIVER_H
 #define DATABASE_DRIVER_H
-#include "sqlite3.h"
+#include <sqlite3.h>
 #include <iostream>
 #include <stdexcept>
 #include "queryResults.hpp"
