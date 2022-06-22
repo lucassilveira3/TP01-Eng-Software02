@@ -1,13 +1,14 @@
 CC= g++
 CFLAGS= -Wall -std=c++17 -ggdb
 INC= -I include/
-LIB= -l sqlite3
+# LIB= -l sqlite3
 EXEC_NAME= tp01
+# $(CC) $(CFLAGS) $^ -o $(EXEC_NAME) $(LIB)
 
 all: build
 
-build: main.o mainController.o cashierController.o managerController.o reportModeController.o productModel.o dateTime.o databaseConnection.o queryResults.o
-	$(CC) $(CFLAGS) $^ -o $(EXEC_NAME) $(LIB)
+build: main.o mainController.o managerController.o reportModeController.o productModel.o dateTime.o databaseConnection.o queryResults.o cashierController.o
+	$(CC) $(CFLAGS) $^ -o $(EXEC_NAME)
 	
 main.o: source/main.cpp
 	$(CC) $(CFLAGS) $(INC) -c $^ -o $@

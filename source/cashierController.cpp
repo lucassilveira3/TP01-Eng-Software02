@@ -1,7 +1,15 @@
 #include "cashierController.hpp"
 #include <stdexcept>
 
-using std::runtime_error;
+using std::runtime_error, std::string;
+
+CashierController::CashierController(
+int id,
+string name,
+double price,
+int amount,
+DatabaseConnection& db_connection
+) : id_(id), amount_(amount), name_(name), price_(price), db_connection_(db_connection) { }
 
 CashierController CashierController::getById(DatabaseConnection& db_connection, int id) {
     string sql_statement = db_connection.
@@ -59,18 +67,18 @@ vector<CashierController> CashierController::getAll(DatabaseConnection& db_conne
     return products;
 }
 
-int ProductModel::id() {
+int CashierController::id() {
     return id_;
 }
 
-string ProductModel::name() {
+string CashierController::name() {
     return name_;
 }
 
-double ProductModel::price() {
+double CashierController::price() {
     return price_;
 }
 
-int ProductModel::amount() {
+int CashierController::amount() {
     return amount_;
 }

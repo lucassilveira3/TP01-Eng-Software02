@@ -23,7 +23,8 @@ class CashierController{
         void removeItem();
         void registerSale();
     private:
-        CashierController();
+        CashierController(int id, string name, double price, int amount,
+            DatabaseConnection& db_connection);
 
         int id_, amount_;
         string name_;
