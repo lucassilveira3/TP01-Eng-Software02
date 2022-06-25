@@ -1,84 +1,58 @@
 #include "cashierController.hpp"
 #include <stdexcept>
 
-using std::runtime_error, std::string;
+using std::runtime_error;
 
-CashierController::CashierController(
-int id,
-string name,
-double price,
-int amount,
-DatabaseConnection& db_connection
-) : id_(id), amount_(amount), name_(name), price_(price), db_connection_(db_connection) { }
+CashierController::CashierController(DatabaseConnection& db_connection) 
+    : db_connection_(db_connection), total_accumulated_(0), sale_opened_(false) {
 
-CashierController CashierController::getById(DatabaseConnection& db_connection, int id) {
-    string sql_statement = db_connection.
-        prepareStatement("SELECT * FROM Prodcuts WHERE id=?", "i", id);
-    QueryResults result = db_connection.execute(sql_statement);
-    if(!result.success()) {
-        throw runtime_error("Failed to retrieve product with id=" + std::to_string(id) + "!\nDatabase error encountered: " + result.status_message());
-    }
-    if(result.num_rows() != 1) {
-        throw runtime_error("Error retrieving product with id=" + std::to_string(id) + "!\nNot enough rows returned by the database!");
-    }
-    // Processing the returned row
-    string name = result.rows()[0]["name"];
-    double price = std::stod(result.rows()[0]["price"]);
-    int amount = std::stoi(result.rows()[0]["amount"]);
-    return CashierController(id, name, price, amount, db_connection);
 }
 
-CashierController CashierController::getByName(DatabaseConnection& db_connection, string name) {
-    string sql_statement = db_connection.
-        prepareStatement("SELECT * FROM Prodcuts WHERE name=?", "s", name.c_str());
-    QueryResults result = db_connection.execute(sql_statement);
-    if(!result.success()) {
-        throw runtime_error("Failed to retrieve product with name=" + name + "!\nDatabase error encountered: " + result.status_message());
+void CashierController::openSale() {
+    if(sale_opened_) {
+        throw runtime_error("Failed to open a new sale!\nAnother sale was opened and never closed!");
     }
-    if(result.num_rows() != 1) {
-        throw runtime_error("Error retrieving product with name=" + name + "!\nNot enough rows returned by the database!");
-    }
-    // Processing the returned row
-    int id = std::stoi(result.rows()[0]["id"]);
-    double price = std::stod(result.rows()[0]["price"]);
-    int amount = std::stoi(result.rows()[0]["amount"]);
-    return CashierController(id, name, price, amount, db_connection);
+    total_accumulated_ = 0;
+    sale_products_.clear();
+    sale_opened_ = true;
 }
 
-vector<CashierController> CashierController::getAll(DatabaseConnection& db_connection) {
-    QueryResults results = db_connection.execute("SELECT * FROM Products");
-    if(!results.success()) {
-        throw runtime_error("Failed to retrieve all products!\nDatabase error (code " + 
-            std::to_string(results.status_code()) + ") encountered: " + results.status_message());
+void CashierController::addItem(string product_name, int amount) {
+    int entry_index = product_entry_index(product_name);
+    if(entry_index >= 0) {
+        throw runtime_error("Failed to add item named \"" + product_name + 
+            "\" to the sale!\nItem already added!");
     }
-    if(!results.has_rows()) {
-        throw runtime_error("Error retrieving all products from the database!\nNo rows returned!");
+    ProductModel product = ProductModel::getByName(db_connection_, product_name);
+    sale_products_.emplace_back(product, amount);
+}
+
+void CashierController::removeItem(string product_name) {
+    int entry_index = product_entry_index(product_name);
+    if(entry_index < 0) {
+        throw runtime_error("A product named \"" + product_name +
+            "wasn't found in the current sale's product list!");
     }
-    // Processing the returned rows
-    vector<CashierController> products;
-    products.reserve(results.num_rows());
-    for(int i = 0; i < results.num_rows(); i++) {
-        int id = std::stoi(results.rows()[0]["id"]);
-        string name = results.rows()[0]["name"];
-        double price = std::stod(results.rows()[0]["price"]);
-        int amount = std::stoi(results.rows()[0]["amount"]);
-        products.emplace_back(CashierController(id, name, price, amount, db_connection));
+    sale_products_[entry_index].amount = 0;
+}
+
+void CashierController::finishSale() {
+    if(!sale_opened_) {
+        throw runtime_error("Failed to finish sale: a sale was never opened!\nPlease, open a sale first!");
     }
-    return products;
+    SaleModel::createSale(db_connection_, sale_products_, total_accumulated_);
+    sale_opened_ = false;
 }
 
-int CashierController::id() {
-    return id_;
+void CashierController::cancelSale() {
+    sale_opened_ = false;
 }
 
-string CashierController::name() {
-    return name_;
-}
-
-double CashierController::price() {
-    return price_;
-}
-
-int CashierController::amount() {
-    return amount_;
+int CashierController::product_entry_index(string product_name) {
+    for(size_t i = 0; i < sale_products_.size(); i++) {
+        if(sale_products_[i].product.name() == product_name) {
+            return i;
+        }
+    }
+    return -1;
 }

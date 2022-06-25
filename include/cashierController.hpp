@@ -3,33 +3,26 @@
 #include <string>
 #include <vector>
 #include "databaseConnection.hpp"
+#include "saleModel.hpp"
 
 using std::string, std::vector;
 
 class CashierController{
     public:
-        static CashierController getById(DatabaseConnection& db_connection, int id);
-        // Returns the first product matching the given name on the database
-        static CashierController getByName(DatabaseConnection& db_connection, string name);
-        static vector<CashierController> getAll(DatabaseConnection& db_connection);
-        int id();
-        string name();
-        double price();
-        int amount();
-        //
+        CashierController(DatabaseConnection& db_connection);
         void openSale();
+        bool hasOpenSell();
+        void addItem(string product_name, int amount);
+        void removeItem(string product_name);
         void finishSale();
-        void addItem();
-        void removeItem();
-        void registerSale();
+        void cancelSale();
     private:
-        CashierController(int id, string name, double price, int amount,
-            DatabaseConnection& db_connection);
+        int product_entry_index(string product_name);
 
-        int id_, amount_;
-        string name_;
-        double price_;
         DatabaseConnection& db_connection_;
+        vector<ProductEntry> sale_products_;
+        double total_accumulated_;
+        bool sale_opened_;
 };
 
 #endif
