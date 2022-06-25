@@ -15,6 +15,7 @@ class ProductModel {
         static ProductModel createProduct(DatabaseConnection& db_connection,
             string name, double price, int amount);
         static void removeProduct(DatabaseConnection& db_connection, int id);
+        ProductModel(const ProductModel&) = default;
         int id();
         string name();
         double price();

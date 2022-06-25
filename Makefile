@@ -6,7 +6,7 @@ EXEC_NAME= tp01
 
 all: build
 
-build: main.o mainController.o managerController.o reportModeController.o productModel.o dateTime.o databaseConnection.o queryResults.o cashierController.o
+build: main.o mainController.o managerController.o reportModeController.o saleModel.o productModel.o dateTime.o databaseConnection.o queryResults.o cashierController.o
 	$(CC) $(CFLAGS) $^ -o $(EXEC_NAME) $(LIB)
 	
 main.o: source/main.cpp
@@ -22,6 +22,9 @@ managerController.o: source/managerController.cpp
 	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
 	
 reportModeController.o: source/reportModeController.cpp
+	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
+
+saleModel.o: source/saleModel.cpp
 	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
 
 productModel.o: source/productModel.cpp
