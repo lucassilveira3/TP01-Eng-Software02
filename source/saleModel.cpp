@@ -65,7 +65,7 @@ vector<SaleModel> SaleModel::getAllSales(DatabaseConnection& db_connection) {
 }
 
 SaleModel SaleModel::createSale(DatabaseConnection& db_connection,
-    const vector<pair<int,int>>& products_and_amounts, double total) {
+    const vector<ProductEntry>& products, double total) {
         DateTime sale_date = DateTime::now();
         string sql_statement = db_connection.prepareStatement(
             "INSERT INTO Sells (date, total) VALUES (?, ?)", "td", sale_date, total);
@@ -75,28 +75,22 @@ SaleModel SaleModel::createSale(DatabaseConnection& db_connection,
                 std::to_string(result.status_code()) + "): " + result.status_message());
         }
         int new_sell_id = db_connection.lastIdInserted();
-        vector<ProductEntry> product_entries;
-        product_entries.reserve(products_and_amounts.size());
-        for(const pair<int, int>& product_and_amount : products_and_amounts) {
+        for(const ProductEntry& product_entry : products) {
             string product_insert_statement = db_connection.prepareStatement(
                 "INSERT INTO SellProducts VALUES (?, ?, ?)",
                 "iii",
                 new_sell_id,
-                product_and_amount.first,
-                product_and_amount.second
+                product_entry.product.id(),
+                product_entry.amount
             );
             QueryResults result = db_connection.execute(sql_statement);
             if(!result.success()) {
                 throw runtime_error("Failed to associate product with id=" +
-                    std::to_string(product_and_amount.first) + " with the created sell (with id="
+                    std::to_string(product_entry.product.id()) + " with the created sell (with id="
                         + std::to_string(new_sell_id));
             }
-            product_entries.emplace_back(
-                ProductModel::getById(db_connection, product_and_amount.first),
-                product_and_amount.second
-            );
         }
-        return SaleModel(db_connection, new_sell_id, sale_date, total, product_entries);
+        return SaleModel(db_connection, new_sell_id, sale_date, total, products);
 }
 
 void SaleModel::removeSale(DatabaseConnection& db_connection, int id) {
@@ -109,16 +103,20 @@ void SaleModel::removeSale(DatabaseConnection& db_connection, int id) {
     }
 }
 
-int SaleModel::id() {
+int SaleModel::id() const {
     return id_;
 }
 
-DateTime SaleModel::timestamp() {
+DateTime SaleModel::timestamp() const {
     return timestamp_;
 }
 
-double SaleModel::totalValue() {
+double SaleModel::totalValue() const {
     return total_value_;
+}
+
+const vector<ProductEntry>& SaleModel::products() const {
+    return products_;
 }
 
 vector<ProductEntry> SaleModel::products() {

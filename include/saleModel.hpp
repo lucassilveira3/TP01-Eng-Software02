@@ -2,12 +2,11 @@
 #define SALE_MODEL_H
 #include <string>
 #include <vector>
-#include <tuple>
 #include "databaseConnection.hpp"
 #include "dateTime.hpp"
 #include "productModel.hpp"
 
-using std::string, std::vector, std::pair;
+using std::string, std::vector;
 
 struct ProductEntry {
     ProductEntry(ProductModel product_model, int product_amount) :
@@ -24,11 +23,12 @@ class SaleModel {
         static SaleModel getSale(DatabaseConnection& db_connection, int id);
         static vector<SaleModel> getAllSales(DatabaseConnection& db_connection);
         static SaleModel createSale(DatabaseConnection& db_connection,
-            const vector<pair<int,int>>& products_and_amounts, double total);
+            const vector<ProductEntry>& products, double total);
         static void removeSale(DatabaseConnection& db_connection, int id);
-        int id();
-        DateTime timestamp();
-        double totalValue();
+        int id() const;
+        DateTime timestamp() const;
+        double totalValue() const;
+        const vector<ProductEntry>& products() const;
         vector<ProductEntry> products();
     private:
         SaleModel(DatabaseConnection& db_connection, int id, DateTime timestamp,
