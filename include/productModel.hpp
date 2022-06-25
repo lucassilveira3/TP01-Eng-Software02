@@ -16,10 +16,10 @@ class ProductModel {
             string name, double price, int amount);
         static void removeProduct(DatabaseConnection& db_connection, int id);
         ProductModel(const ProductModel&) = default;
-        int id();
-        string name();
-        double price();
-        int amount();
+        int id() const;
+        string name() const;
+        double price() const;
+        int amount() const;
         void rename(string new_name);
         void updatePrice(double new_price);
         void updateAmount(int new_amount);

@@ -98,19 +98,19 @@ void ProductModel::removeProduct(DatabaseConnection& db_connection, int id) {
     }
 }
 
-int ProductModel::id() {
+int ProductModel::id() const {
     return id_;
 }
 
-string ProductModel::name() {
+string ProductModel::name() const {
     return name_;
 }
 
-double ProductModel::price() {
+double ProductModel::price() const {
     return price_;
 }
 
-int ProductModel::amount() {
+int ProductModel::amount() const {
     return amount_;
 }
 
