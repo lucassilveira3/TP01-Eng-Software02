@@ -9,7 +9,7 @@ ReportModeController::ReportModeController(DatabaseConnection& db_connection)
 }
 
 vector<vector<string>> ReportModeController::allSales() {
-    QueryResults results = db_connection_.execute("SELECT strftime(\"%Y-%m-%d\") AS date, name AS `product name`, amount, price FROM Sells JOIN SellProducts ON Sells.id=sellId JOIN Products ON productId=Products.id");
+    QueryResults results = db_connection_.execute("SELECT strftime(\"%Y-%m-%d\") AS date, name AS `product name`, SellProducts.amount, price FROM Sells JOIN SellProducts ON Sells.id=sellId JOIN Products ON productId=Products.id");
     return process_results(results);
 }
 
@@ -48,10 +48,12 @@ vector<vector<string>> ReportModeController::process_results(QueryResults& resul
     vector<vector<string>> result_table;
     result_table.reserve(num_rows + 1);
     result_table.push_back(results.column_names());
-    for(int i = 0; i < num_rows; i++) {
+    for(int i = 1; i < num_rows; i++) {
         result_table.emplace_back(num_columns, "");
+        int j = 0;
         for(auto column : results.rows()[i]) {
-            result_table[i].emplace_back(column.second);
+            result_table[i][j] = column.second;
+            j++;
         }
     }
     return result_table;
