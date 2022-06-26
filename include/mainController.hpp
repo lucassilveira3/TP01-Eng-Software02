@@ -7,6 +7,8 @@
 
 DatabaseConnection startDatabaseConnection();
 
+void prettyPrintTable(const vector<vector<string>>& table);
+
 class MainController {
     public:
         MainController(DatabaseConnection& db_connection);

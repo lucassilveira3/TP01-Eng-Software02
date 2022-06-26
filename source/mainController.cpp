@@ -7,6 +7,7 @@
 #include <exception>
 #include <thread>
 #include <chrono>
+#include <sstream>
 
 #define DATABASE_FILE_PATH "data.db"
 #define DATABASE_CREATE_SCRIPT_PATH "database/initializeScript.sql"
@@ -51,6 +52,59 @@ DatabaseConnection startDatabaseConnection() {
         throw std::runtime_error(string("Exception encountered while opening the database file:\n") + e.what());
     }
     return connection;
+}
+
+// Auxiliary function to center align the string using a given with
+string centerAlign(const string& str, int width) {
+    stringstream stream;
+    int length = wstring_convert<codecvt_utf8<char32_t>, char32_t>{}.from_bytes(str).size();
+    int padding = width - length + 2;
+    const string spaces(padding / 2, ' ');
+    stream << spaces << str << spaces;
+    if(padding > 0 && padding % 2 != 0) {
+        stream << " ";
+    }
+    return stream.str();
+}
+
+void prettyPrintTable(const vector<vector<string>>& table) {
+    // Treating empty tables and getting the table's dimensions
+    if(table.empty()) {
+        return;
+    }
+    int rows = table.size(), columns = table[0].size();
+    // Calculating the table columns max with
+    vector<int> max_widths(columns, 0);
+    for(int j = 0; j < columns; j++) {
+        for(int i = 0; i < rows; i++) {
+            if(max_widths[j] < ((int) table[i][j].size())) {
+                max_widths[j] = table[i][j].size();
+            }
+        }
+    }
+    // Defining the print format
+    const char* column_separator = "|";
+    const char* row_separator = "-:";
+    // Printing the header and the separator
+    for(int j = 0; j < columns; j++) {
+        cout << column_separator << centerAlign(table[0][j], max_widths[j]);
+    }
+    cout << column_separator << endl;
+    for(int j = 0; j < columns; j++) {
+        cout << column_separator;
+        for(int k = 0; k < max_widths[j] + 1; k++) {
+            cout << row_separator[0];
+        }
+        cout << row_separator[1];
+    }
+    cout << column_separator << endl;
+    // Printing the rows
+    for(int i = 1; i < rows; i++) {
+        for(int j = 0; j < columns; j++) {
+            cout << column_separator << centerAlign(table[i][j], max_widths[j]);
+        }
+        cout << column_separator << endl;
+    }
 }
 
 MainController::MainController(DatabaseConnection& db_connection) :
@@ -217,10 +271,29 @@ void MainController::processManagerOption(int option) {
 void MainController::processReportOption(int options) {
     switch(options) {
         case 1:
+            prettyPrintTable(report_mode_.allSales());
+            break;
         case 2:
+            prettyPrintTable(report_mode_.mostSoldItems());
+            break;
         case 3:
+        {
+            string input;
+            cout << "Enter the start of the desired period on the \"yyyy-mm-dd\" format: ";
+            getline(cin, input);
+            DateTime period_start(input, "%Y-%m-%d");
+            cout << "Enter the end of the desired period on the \"yyyy-mm-dd\" format: ";
+            getline(cin, input);
+            DateTime period_end(input, "%Y-%m-%d");
+            prettyPrintTable(report_mode_.salesOnPeriod(period_start, period_end));
+            break;
+        }
         case 4:
+            prettyPrintTable(report_mode_.highestSalesDays());
+            break;
         case 5:
+            prettyPrintTable(report_mode_.lowestSalesDays());
+            break;
         case 6:
             cout << "Exiting...\n";
             break;
@@ -228,5 +301,7 @@ void MainController::processReportOption(int options) {
             cout << "Invalid option! Please, enter a valid option...\n";
             break;
     }
-    this_thread::sleep_for(chrono::milliseconds(800));
+    cout << "Press any key to continue...";
+    cin.ignore();
+    cin.get();
 }
