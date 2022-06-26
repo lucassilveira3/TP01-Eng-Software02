@@ -17,6 +17,10 @@ void CashierController::openSale() {
     sale_opened_ = true;
 }
 
+bool CashierController::hasOpenSell() {
+    return sale_opened_;
+}
+
 void CashierController::addItem(string product_name, int amount) {
     int entry_index = product_entry_index(product_name);
     if(entry_index >= 0) {
@@ -24,6 +28,7 @@ void CashierController::addItem(string product_name, int amount) {
             "\" to the sale!\nItem already added!");
     }
     ProductModel product = ProductModel::getByName(db_connection_, product_name);
+    total_accumulated_ += product.price() * amount;
     sale_products_.emplace_back(product, amount);
 }
 
@@ -33,14 +38,30 @@ void CashierController::removeItem(string product_name) {
         throw runtime_error("A product named \"" + product_name +
             "wasn't found in the current sale's product list!");
     }
+    total_accumulated_ -= sale_products_[entry_index].product.price() *
+        sale_products_[entry_index].amount;
     sale_products_[entry_index].amount = 0;
+}
+
+const vector<ProductEntry>& CashierController::productList() {
+    return sale_products_;
 }
 
 void CashierController::finishSale() {
     if(!sale_opened_) {
         throw runtime_error("Failed to finish sale: a sale was never opened!\nPlease, open a sale first!");
     }
+    if(total_accumulated_ <= 0) {
+        sale_opened_ = false;
+        return;
+    }
     SaleModel::createSale(db_connection_, sale_products_, total_accumulated_);
+    // Updating the inventory
+    for(ProductEntry& entry : sale_products_) {
+        if(entry.amount > 0) {
+            entry.product.updateAmount(entry.product.amount() - entry.amount);
+        }
+    }
     sale_opened_ = false;
 }
 

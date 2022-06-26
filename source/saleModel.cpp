@@ -68,7 +68,7 @@ SaleModel SaleModel::createSale(DatabaseConnection& db_connection,
     const vector<ProductEntry>& products, double total) {
         DateTime sale_date = DateTime::now();
         string sql_statement = db_connection.prepareStatement(
-            "INSERT INTO Sells (date, total) VALUES (?, ?)", "td", sale_date, total);
+            "INSERT INTO Sells (date, total) VALUES (?, ?)", "sd", sale_date.to_string().c_str(), total);
         QueryResults result = db_connection.execute(sql_statement);
         if(!result.success()) {
             throw runtime_error("Failed to create new sale!\nDatabase error encountered (code " +
@@ -76,18 +76,20 @@ SaleModel SaleModel::createSale(DatabaseConnection& db_connection,
         }
         int new_sell_id = db_connection.lastIdInserted();
         for(const ProductEntry& product_entry : products) {
-            string product_insert_statement = db_connection.prepareStatement(
-                "INSERT INTO SellProducts VALUES (?, ?, ?)",
-                "iii",
-                new_sell_id,
-                product_entry.product.id(),
-                product_entry.amount
-            );
-            QueryResults result = db_connection.execute(sql_statement);
-            if(!result.success()) {
-                throw runtime_error("Failed to associate product with id=" +
-                    std::to_string(product_entry.product.id()) + " with the created sell (with id="
-                        + std::to_string(new_sell_id));
+            if(product_entry.amount > 0) {
+                string product_insert_statement = db_connection.prepareStatement(
+                    "INSERT INTO SellProducts VALUES (?, ?, ?)",
+                    "iii",
+                    new_sell_id,
+                    product_entry.product.id(),
+                    product_entry.amount
+                );
+                QueryResults result = db_connection.execute(product_insert_statement);
+                if(!result.success()) {
+                    throw runtime_error("Failed to associate product with id=" +
+                        std::to_string(product_entry.product.id()) + " with the created sell (with id="
+                            + std::to_string(new_sell_id));
+                }
             }
         }
         return SaleModel(db_connection, new_sell_id, sale_date, total, products);

@@ -14,6 +14,7 @@ class CashierController{
         bool hasOpenSell();
         void addItem(string product_name, int amount);
         void removeItem(string product_name);
+        const vector<ProductEntry>& productList();
         void finishSale();
         void cancelSale();
     private:
