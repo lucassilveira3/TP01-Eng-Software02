@@ -7,15 +7,14 @@ using namespace std;
 
 int main(){
     try {
-        DatabaseConnection connection = startDatabaseConnection();
-        cout << "Success opening the database!" << endl;
-        ProductModel m = ProductModel::createProduct(connection, "Banana", 2.50, 100);
-        cout << "Created product " << m.name() << " with id=" << m.id() <<  endl;
-        ProductModel m2 = ProductModel::createProduct(connection, "Maçã", 5.20, 5);
-        cout << "Created product " << m2.name() << " with id=" << m2.id() <<  endl;
-        m2.updateAmount(10);
-        m2.updatePrice(6.20);
-        cout << "Connection closed! Success!" << endl;
+        DatabaseConnection database_connection = startDatabaseConnection();
+        MainController application(database_connection);
+        int option;
+        while(!application.finished()) {
+            application.displayMenu();
+            cin >> option;
+            application.processOption(option);
+        }
     } catch(std::exception& error) {
         cerr << "Fatal application error encountered:\n" << error.what() << "\nExiting...\n";
         return 1;
