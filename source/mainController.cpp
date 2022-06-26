@@ -267,7 +267,12 @@ void MainController::processManagerOption(int option) {
             cin >> amount;
             cout << "Enter the product's price: ";
             cin >> price;
-            manager_mode_.createProduct({name, amount, price});
+            try {
+                manager_mode_.createProduct({name, amount, price});
+            }catch(runtime_error& e) {
+                cout << "Failed to create the product!\nThe following error was encountered: " << e.what() << endl;
+                halt();
+            }
             break;
         }
         case 2:
@@ -278,7 +283,12 @@ void MainController::processManagerOption(int option) {
             getline(cin >> ws, name);
             cout << "Enter the product's new price: ";
             cin >> new_price;
-            manager_mode_.updatePrice(name, new_price);
+            try {
+                manager_mode_.updatePrice(name, new_price);
+            }catch(runtime_error& e) {
+                cout << "Failed to update the product's price!\nThe following error was encountered: " << e.what() << endl;
+                halt();
+            }
             break;
         }
         case 3:
@@ -286,7 +296,12 @@ void MainController::processManagerOption(int option) {
             string name;
             cout << "Enter the product name: ";
             getline(cin >> ws, name);
-            manager_mode_.removeProduct(name);
+            try {
+                manager_mode_.removeProduct(name);
+            }catch(runtime_error& e) {
+                cout << "Failed to remove the product!\nThe following error was encountered: " << e.what() << endl;
+                halt();
+            }
             break;
         }
         case 4:
@@ -297,7 +312,12 @@ void MainController::processManagerOption(int option) {
             getline(cin >> ws, name);
             cout << "Enter the product's new amount: ";
             cin >> new_amount;
-            manager_mode_.updateInventory(name, new_amount);
+            try {
+                manager_mode_.updateInventory(name, new_amount);
+            }catch(runtime_error& e) {
+                cout << "Failed to update the product's inventory!\nThe following error was encountered: " << e.what() << endl;
+                halt();
+            }
             break;
         }
         case 5:
@@ -312,9 +332,7 @@ void MainController::processManagerOption(int option) {
             }
             cout << endl;
             prettyPrintTable(inventory_table);
-            cout << "Press enter to continue...";
-            cin.ignore();
-            cin.get();
+            halt();
             return;
         }
         case 6:
@@ -369,9 +387,7 @@ void MainController::processReportOption(int options) {
             cout << "Invalid option! Please, enter a valid option...\n";
             break;
     }
-    cout << "Press enter to continue...";
-    cin.ignore();
-    cin.get();
+    halt();
 }
 
 void MainController::processSalesOption(int option) {
@@ -384,7 +400,12 @@ void MainController::processSalesOption(int option) {
             getline(cin >> ws, product_name);
             cout << "Enter the amount desired: ";
             cin >> amount;
-            cashier_mode_.addItem(product_name, amount);
+            try {
+                cashier_mode_.addItem(product_name, amount);
+            }catch(runtime_error& e) {
+                cout << "Failed to add product to sales list!\nThe following error was encountered: " << e.what() << endl;
+                halt();
+            }
             break;
         }
         case 2:
@@ -392,12 +413,22 @@ void MainController::processSalesOption(int option) {
             string product_name;
             cout << "Enter the product name: ";
             getline(cin >> ws, product_name);
-            cashier_mode_.removeItem(product_name);
+            try {
+                cashier_mode_.removeItem(product_name);
+            }catch(runtime_error& e) {
+                cout << "Failed to remove item from the sales list!\nThe following error was encountered: " << e.what() << endl;
+                halt();
+            }
             break;
         }
         case 3:
             cout << "Registering sale..." << endl;
-            cashier_mode_.finishSale();
+            try {
+                cashier_mode_.finishSale();
+            }catch(runtime_error& e) {
+                cout << "Failed to register the sale!\nThe following error was encountered: " << e.what() << endl;
+                halt();
+            }
             break;
         case 4:
         {
@@ -415,4 +446,10 @@ void MainController::processSalesOption(int option) {
             break;
     }
     this_thread::sleep_for(chrono::milliseconds(800));
+}
+
+void MainController::halt() {
+    cout << "Press enter to continue...";
+    cin.ignore();
+    cin.get();
 }

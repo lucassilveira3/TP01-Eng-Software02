@@ -24,6 +24,7 @@ class MainController {
         void processManagerOption(int option);
         void processReportOption(int option);
         void processSalesOption(int option);
+        void halt();
 
         CashierController cashier_mode_;
         ManagerController manager_mode_;

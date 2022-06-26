@@ -27,7 +27,16 @@ void CashierController::addItem(string product_name, int amount) {
         throw runtime_error("Failed to add item named \"" + product_name + 
             "\" to the sale!\nItem already added!");
     }
+    if(amount <= 0) {
+        throw runtime_error("Failed to add item named \"" + product_name + 
+            "\" to the sale!\nInvalid amount specified!");
+    }
     ProductModel product = ProductModel::getByName(db_connection_, product_name);
+    if(product.amount() < amount) {
+        throw runtime_error("Failed to add item named \"" + product_name + 
+            "\" to the sale!\nNot enough units in stock (only " +
+                std::to_string(product.amount()) + " units are available)!");
+    }
     total_accumulated_ += product.price() * amount;
     sale_products_.emplace_back(product, amount);
 }
