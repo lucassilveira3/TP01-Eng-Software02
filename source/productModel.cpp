@@ -58,10 +58,10 @@ vector<ProductModel> ProductModel::getAll(DatabaseConnection& db_connection) {
     vector<ProductModel> products;
     products.reserve(results.num_rows());
     for(int i = 0; i < results.num_rows(); i++) {
-        int id = std::stoi(results.rows()[0]["id"]);
-        string name = results.rows()[0]["name"];
-        double price = std::stod(results.rows()[0]["price"]);
-        int amount = std::stoi(results.rows()[0]["amount"]);
+        int id = std::stoi(results.rows()[i]["id"]);
+        string name = results.rows()[i]["name"];
+        double price = std::stod(results.rows()[i]["price"]);
+        int amount = std::stoi(results.rows()[i]["amount"]);
         products.emplace_back(ProductModel(id, name, price, amount, db_connection));
     }
     return products;
