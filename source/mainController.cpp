@@ -211,14 +211,44 @@ void MainController::displayReportSubmenu() {
     cout << "Select an option: ";
 }
 
+void MainController::displaySalesSubmenu() {
+    system(CLEAR_CMD);
+    cout << "=======================" << endl;
+    cout << "SALE\n" << endl;
+    if(!cashier_mode_.productList().empty()) {
+        cout << "Products:" << endl;
+        for(const ProductEntry& entry : cashier_mode_.productList()) {
+            cout << entry.product.name() << " - " << entry.amount << endl;
+        }
+        cout << endl;
+    }
+    cout << "1 - Add product" << endl;
+    cout << "2 - Remove product" << endl;
+    cout << "3 - Finish sell" << endl;
+    cout << "4 - Exit" << endl;
+    cout << "=======================" << endl;
+    cout << "Select an option: ";
+}
+
 void MainController::processCashierOption(int option) {
     switch(option) {
         case 1:
+        {
+            int option;
             cashier_mode_.openSale();
+            while(cashier_mode_.hasOpenSell()) {
+                displaySalesSubmenu();
+                cin >> option;
+                processSalesOption(option);
+            }
             break;
+        }
         case 2:
             cout << "Exiting...\n";
             exit_submenu_ = true;
+            break;
+        default:
+            cout << "Invalid option! Please, enter a valid option...\n";
             break;
     }
     this_thread::sleep_for(chrono::milliseconds(800));
@@ -342,4 +372,47 @@ void MainController::processReportOption(int options) {
     cout << "Press enter to continue...";
     cin.ignore();
     cin.get();
+}
+
+void MainController::processSalesOption(int option) {
+    switch(option) {
+        case 1:
+        {
+            string product_name;
+            int amount;
+            cout << "Enter the product name: ";
+            getline(cin >> ws, product_name);
+            cout << "Enter the amount desired: ";
+            cin >> amount;
+            cashier_mode_.addItem(product_name, amount);
+            break;
+        }
+        case 2:
+        {
+            string product_name;
+            cout << "Enter the product name: ";
+            getline(cin >> ws, product_name);
+            cashier_mode_.removeItem(product_name);
+            break;
+        }
+        case 3:
+            cout << "Registering sale..." << endl;
+            cashier_mode_.finishSale();
+            break;
+        case 4:
+        {
+            char option;
+            cout << "Do you want to exit and cancel the current sale? (y/N): ";
+            cin >> option;
+            if(option == 'Y' || option == 'y') {
+                cout << "Exiting..." << endl;
+                cashier_mode_.cancelSale();
+            }
+            break;
+        }
+        default:
+            cout << "Invalid option! Please, enter a valid option..." << endl;
+            break;
+    }
+    this_thread::sleep_for(chrono::milliseconds(800));
 }

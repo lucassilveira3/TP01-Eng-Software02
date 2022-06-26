@@ -22,7 +22,8 @@ class MainController {
         void displaySalesSubmenu();
         void processCashierOption(int option);
         void processManagerOption(int option);
-        void processReportOption(int options);
+        void processReportOption(int option);
+        void processSalesOption(int option);
 
         CashierController cashier_mode_;
         ManagerController manager_mode_;
