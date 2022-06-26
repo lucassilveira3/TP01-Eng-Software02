@@ -265,7 +265,7 @@ void MainController::processManagerOption(int option) {
             int new_amount;
             cout << "Enter the product name: ";
             getline(cin >> ws, name);
-            cout << "Enter the product's new price: ";
+            cout << "Enter the product's new amount: ";
             cin >> new_amount;
             manager_mode_.updateInventory(name, new_amount);
             break;
@@ -273,7 +273,19 @@ void MainController::processManagerOption(int option) {
         case 5:
         {
             vector<InventoryEntry> inventory = manager_mode_.checkInventory();
-            break;
+            vector<vector<string>> inventory_table = { { "name", "price", "quantity" } };
+            inventory_table.reserve(inventory.size() + 1);
+            for(InventoryEntry& entry : inventory) {
+                inventory_table.emplace_back(vector<string>{ entry.product_name,
+                    to_string(entry.price), to_string(entry.amount) });
+            
+            }
+            cout << endl;
+            prettyPrintTable(inventory_table);
+            cout << "Press enter to continue...";
+            cin.ignore();
+            cin.get();
+            return;
         }
         case 6:
             cout << "Exiting...\n";
@@ -327,7 +339,7 @@ void MainController::processReportOption(int options) {
             cout << "Invalid option! Please, enter a valid option...\n";
             break;
     }
-    cout << "Press any key to continue...";
+    cout << "Press enter to continue...";
     cin.ignore();
     cin.get();
 }
