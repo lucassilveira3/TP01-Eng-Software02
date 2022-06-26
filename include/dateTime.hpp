@@ -10,8 +10,9 @@ class DateTime {
         static DateTime now();
         // Constructs a DateTime object from a UNIX timestamp
         DateTime(time_t time_stamp);
-        // Constructs a DateTime object from a date string on the "YYYY/MM/DD - HH:MM:SS" format
-        DateTime(const string& date_string);
+        // Constructs a DateTime object from a date string on the given format.
+        // The default format is "%Y/%m/%d - %H:%M:%S"
+        DateTime(const string& date_string, const char* format = "%Y/%m/%d - %H:%M:%S");
         int day() const;
         int month() const;
         int year() const;

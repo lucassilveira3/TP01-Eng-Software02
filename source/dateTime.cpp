@@ -13,9 +13,9 @@ DateTime::DateTime(time_t time_stamp) {
     time_data_ = *localtime(&time_stamp_);
 }
 
-DateTime::DateTime(const string& date_string) {
+DateTime::DateTime(const string& date_string, const char* format) {
     std::istringstream input_string(date_string);
-    input_string >> std::get_time(&time_data_, "%Y/%m/%d - %H:%M:%S");
+    input_string >> std::get_time(&time_data_, format);
     time_stamp_ = mktime(&time_data_);
 }
 
