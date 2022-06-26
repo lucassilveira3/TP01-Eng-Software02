@@ -8,6 +8,7 @@
 #include <thread>
 #include <chrono>
 #include <sstream>
+#include <regex>
 
 #define DATABASE_FILE_PATH "data.db"
 #define DATABASE_CREATE_SCRIPT_PATH "database/initializeScript.sql"
@@ -295,13 +296,20 @@ void MainController::processReportOption(int options) {
             break;
         case 3:
         {
-            string input;
+            string period_start, period_end;
+            regex date_pattern(R"(\d{4}-\d{2}-\d{2})");
             cout << "Enter the start of the desired period on the \"yyyy-mm-dd\" format: ";
-            getline(cin, input);
-            DateTime period_start(input, "%Y-%m-%d");
+            cin >> period_start;
+            if(!regex_match(period_start, date_pattern)) {
+                cout << "Invalid input! Please try again...\n";
+                break;
+            }
             cout << "Enter the end of the desired period on the \"yyyy-mm-dd\" format: ";
-            getline(cin, input);
-            DateTime period_end(input, "%Y-%m-%d");
+            cin >> period_end;
+            if(!regex_match(period_end, date_pattern)) {
+                cout << "Invalid input! Please try again...\n";
+                break;
+            }
             prettyPrintTable(report_mode_.salesOnPeriod(period_start, period_end));
             break;
         }
@@ -314,7 +322,7 @@ void MainController::processReportOption(int options) {
         case 6:
             cout << "Exiting...\n";
             exit_submenu_ = true;
-            break;
+            return;
         default:
             cout << "Invalid option! Please, enter a valid option...\n";
             break;

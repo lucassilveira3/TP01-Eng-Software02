@@ -9,15 +9,15 @@ ReportModeController::ReportModeController(DatabaseConnection& db_connection)
 }
 
 vector<vector<string>> ReportModeController::allSales() {
-    QueryResults results = db_connection_.execute("SELECT strftime(\"%Y-%m-%d\") AS date, name AS `product name`, SellProducts.amount, price FROM Sells JOIN SellProducts ON Sells.id=sellId JOIN Products ON productId=Products.id");
+    QueryResults results = db_connection_.execute("SELECT strftime(\"%Y-%m-%d\", date) AS date, name AS `product name`, SellProducts.amount, price FROM Sells JOIN SellProducts ON Sells.id=sellId JOIN Products ON productId=Products.id");
     return process_results(results);
 }
 
-vector<vector<string>> ReportModeController::salesOnPeriod(DateTime period_start,
-    DateTime period_end) {
+vector<vector<string>> ReportModeController::salesOnPeriod(string period_start,
+    string period_end) {
     string sql_statement = db_connection_.prepareStatement(
-        "SELECT date, name, SellProducts.amount FROM Sells JOIN SellProducts ON Sells.id=sellId JOIN Products on Products.id=productId WHERE date BETWEEN ? AND ?",
-        "tt",
+        "SELECT strftime(\"%Y-%m-%d\", date) AS date, name AS `product name`, SellProducts.amount, price FROM Sells JOIN SellProducts ON Sells.id=sellId JOIN Products ON productId=Products.id WHERE strftime(\"%Y-%m-%d\", date) BETWEEN ? AND ?",
+        "ss",
         period_start,
         period_end
     );
@@ -48,10 +48,10 @@ vector<vector<string>> ReportModeController::process_results(QueryResults& resul
     vector<vector<string>> result_table;
     result_table.reserve(num_rows + 1);
     result_table.push_back(results.column_names());
-    for(int i = 1; i < num_rows; i++) {
+    for(int i = 1; i < num_rows + 1; i++) {
         result_table.emplace_back(num_columns, "");
         int j = 0;
-        for(auto column : results.rows()[i]) {
+        for(auto column : results.rows()[i - 1]) {
             result_table[i][j] = column.second;
             j++;
         }
