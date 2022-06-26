@@ -35,9 +35,9 @@ time_t DateTime::timestamp() const {
     return time_stamp_;
 }
 
-string DateTime::to_string() const {
+string DateTime::to_string(const char* format) const {
     char time_string[TIME_BUFFER_SIZE];
-    strftime(time_string, TIME_BUFFER_SIZE, "%Y/%m/%d - %H:%M:%S", &time_data_);
+    strftime(time_string, TIME_BUFFER_SIZE, format, &time_data_);
     return string(time_string);
 }
 
