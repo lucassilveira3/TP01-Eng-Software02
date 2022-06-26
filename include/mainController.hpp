@@ -27,7 +27,7 @@ class MainController {
         CashierController cashier_mode_;
         ManagerController manager_mode_;
         ReportModeController report_mode_;
-        bool finished_;
+        bool finished_, exit_submenu_;
 };
 
 #endif

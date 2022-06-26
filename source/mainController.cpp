@@ -128,20 +128,35 @@ void MainController::processOption(int option_code) {
     int sub_option;
     switch(option_code) {
         case 1:
-            displayCashierSubmenu();
-            cin >> sub_option;
-            processCashierOption(sub_option);
+        {
+            exit_submenu_ = false;
+            while(!exit_submenu_) {
+                displayCashierSubmenu();
+                cin >> sub_option;
+                processCashierOption(sub_option);
+            }
             break;
+        }
         case 2:
-            displayManagerSubmenu();
-            cin >> sub_option;
-            processManagerOption(sub_option);
+        {
+            exit_submenu_ = false;
+            while(!exit_submenu_) {
+                displayManagerSubmenu();
+                cin >> sub_option;
+                processManagerOption(sub_option);
+            }
             break;
+        }
         case 3:
-            displayReportSubmenu();
-            cin >> sub_option;
-            processReportOption(sub_option);
+        {
+            exit_submenu_ = false;
+            while(!exit_submenu_) {
+                displayReportSubmenu();
+                cin >> sub_option;
+                processReportOption(sub_option);
+            }
             break;
+        }
         case 4:
             cout << "Exiting..." << endl;
             finished_ = true;
@@ -202,6 +217,7 @@ void MainController::processCashierOption(int option) {
             break;
         case 2:
             cout << "Exiting...\n";
+            exit_submenu_ = true;
             break;
     }
     this_thread::sleep_for(chrono::milliseconds(800));
@@ -260,6 +276,7 @@ void MainController::processManagerOption(int option) {
         }
         case 6:
             cout << "Exiting...\n";
+            exit_submenu_ = true;
             break;
         default:
             cout << "Invalid option! Please, enter a valid option...\n";
@@ -296,6 +313,7 @@ void MainController::processReportOption(int options) {
             break;
         case 6:
             cout << "Exiting...\n";
+            exit_submenu_ = true;
             break;
         default:
             cout << "Invalid option! Please, enter a valid option...\n";
