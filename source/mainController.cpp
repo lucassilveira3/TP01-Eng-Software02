@@ -232,10 +232,10 @@ void MainController::processManagerOption(int option) {
             int amount;
             double price;
             cout << "Enter the product name: ";
-            getline(cin, name);
+            getline(cin >> ws, name);
             cout << "Enter the product's stock (units): ";
             cin >> amount;
-            cout << "Enter the product's price";
+            cout << "Enter the product's price: ";
             cin >> price;
             manager_mode_.createProduct({name, amount, price});
             break;
@@ -245,7 +245,7 @@ void MainController::processManagerOption(int option) {
             string name;
             double new_price;
             cout << "Enter the product name: ";
-            getline(cin, name);
+            getline(cin >> ws, name);
             cout << "Enter the product's new price: ";
             cin >> new_price;
             manager_mode_.updatePrice(name, new_price);
@@ -255,7 +255,7 @@ void MainController::processManagerOption(int option) {
         {
             string name;
             cout << "Enter the product name: ";
-            getline(cin, name);
+            getline(cin >> ws, name);
             manager_mode_.removeProduct(name);
             break;
         }
@@ -264,7 +264,7 @@ void MainController::processManagerOption(int option) {
             string name;
             int new_amount;
             cout << "Enter the product name: ";
-            getline(cin, name);
+            getline(cin >> ws, name);
             cout << "Enter the product's new price: ";
             cin >> new_amount;
             manager_mode_.updateInventory(name, new_amount);

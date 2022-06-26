@@ -13,7 +13,7 @@ DatabaseConnection& db_connection
 
 ProductModel ProductModel::getById(DatabaseConnection& db_connection, int id) {
     string sql_statement = db_connection.
-        prepareStatement("SELECT * FROM Prodcuts WHERE id=?", "i", id);
+        prepareStatement("SELECT * FROM Products WHERE id=?", "i", id);
     QueryResults result = db_connection.execute(sql_statement);
     if(!result.success()) {
         throw runtime_error("Failed to retrieve product with id=" + std::to_string(id) + "!\nDatabase error encountered: " + result.status_message());
@@ -30,7 +30,7 @@ ProductModel ProductModel::getById(DatabaseConnection& db_connection, int id) {
 
 ProductModel ProductModel::getByName(DatabaseConnection& db_connection, string name) {
     string sql_statement = db_connection.
-        prepareStatement("SELECT * FROM Prodcuts WHERE name=?", "s", name.c_str());
+        prepareStatement("SELECT * FROM Products WHERE name=?", "s", name.c_str());
     QueryResults result = db_connection.execute(sql_statement);
     if(!result.success()) {
         throw runtime_error("Failed to retrieve product with name=" + name + "!\nDatabase error encountered: " + result.status_message());
