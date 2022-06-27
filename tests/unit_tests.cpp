@@ -72,3 +72,44 @@ TEST_SUITE("CashierController class test") {
         CHECK(cash.hasOpenSell() == false);
     }
 }
+
+TEST_SUITE("Inventory struct tests"){
+    TEST_CASE("Simple inventory"){
+        InventoryEntry inventoryTest("teste", 1, 10);
+        CHECK(inventoryTest.product_name == "teste");
+        CHECK(inventoryTest.amount == 1);
+        CHECK(inventoryTest.price == 10);
+
+    }
+
+    TEST_CASE("Impossible inventory"){
+        InventoryEntry inventoryTest("teste", -1, -10);
+        CHECK(inventoryTest.product_name == "teste");
+        CHECK(inventoryTest.amount == -1);
+        CHECK(inventoryTest.price == -10);
+
+    }
+
+    TEST_CASE("Empty inventory"){
+        InventoryEntry inventoryTest("teste", 0, 10);
+        CHECK(inventoryTest.product_name == "teste");
+        CHECK(inventoryTest.amount == 0);
+        CHECK(inventoryTest.price == 10);
+
+    }
+
+    TEST_CASE("Multiple inventories"){
+        InventoryEntry inventoryTest("teste", 1, 10);
+        CHECK(inventoryTest.product_name == "teste");
+        CHECK(inventoryTest.amount == 1);
+        CHECK(inventoryTest.price == 10);
+
+        InventoryEntry inventoryTest2("teste2", 2, 100);
+        CHECK(inventoryTest2.product_name == "teste2");
+        CHECK(inventoryTest2.amount == 2);
+        CHECK(inventoryTest2.price == 100);
+
+
+    }
+
+}
