@@ -40,6 +40,13 @@ TEST_SUITE("DateTime class tests") {
         CHECK(date.to_string("%d/%m/%Y - %H:%M") == "23/06/2022 - 18:47");
         CHECK(date.to_string("%Y-%m-%d %H:%M:%S") == "2022-06-23 18:47:30");
     }
+    
+    TEST_CASE("Construct impossible date") {
+        DateTime date1("2000-13-32", "%Y-%m-%d");
+        CHECK(date1.day() == 31);
+        CHECK(date1.month() == 12);
+        CHECK(date1.year() == 1999);
+    }
 }
 
 TEST_SUITE("CashierController class test") {
@@ -108,6 +115,20 @@ TEST_SUITE("Inventory struct tests"){
         CHECK(inventoryTest2.product_name == "teste2");
         CHECK(inventoryTest2.amount == 2);
         CHECK(inventoryTest2.price == 100);
+
+
+    }
+
+    TEST_CASE("Multiple inventories 2"){
+        InventoryEntry inventoryTest("teste", 1, 10);
+        CHECK(inventoryTest.product_name == "teste");
+        CHECK(inventoryTest.amount == 1);
+        CHECK(inventoryTest.price == 10);
+
+        InventoryEntry inventoryTest2("teste", 1, 10);
+        CHECK(inventoryTest2.product_name == "teste");
+        CHECK(inventoryTest2.amount == 1);
+        CHECK(inventoryTest2.price == 10);
 
 
     }
