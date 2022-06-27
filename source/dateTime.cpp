@@ -15,6 +15,7 @@ DateTime::DateTime(time_t time_stamp) {
 
 DateTime::DateTime(const string& date_string, const char* format) {
     std::istringstream input_string(date_string);
+    time_data_ = { 0 };
     input_string >> std::get_time(&time_data_, format);
     time_stamp_ = mktime(&time_data_);
 }
