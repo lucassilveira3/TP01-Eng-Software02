@@ -12,7 +12,7 @@ unit_tests: unit
 build: main.o mainController.o managerController.o reportModeController.o saleModel.o productModel.o dateTime.o databaseConnection.o queryResults.o cashierController.o
 	$(CC) $(CFLAGS) $^ -o $(EXEC_NAME) $(LIB)
 
-unit: tests/unit/unit_tests.cpp dateTime.o
+unit: tests/unit_tests.cpp dateTime.o
 	$(CC) $(CFLAGS) $(INC) $^ -o $@
 	
 main.o: source/main.cpp
@@ -49,4 +49,4 @@ run:
 	./tp01
 	
 clean:
-	rm -rf *.o tp01
+	rm -rf *.o tp01 unit
