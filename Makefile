@@ -6,8 +6,14 @@ EXEC_NAME= tp01
 
 all: build
 
+unit_tests: unit
+	./unit
+
 build: main.o mainController.o managerController.o reportModeController.o saleModel.o productModel.o dateTime.o databaseConnection.o queryResults.o cashierController.o
 	$(CC) $(CFLAGS) $^ -o $(EXEC_NAME) $(LIB)
+
+unit: tests/unit/unit_tests.cpp dateTime.o
+	$(CC) $(CFLAGS) $(INC) $^ -o $@
 	
 main.o: source/main.cpp
 	$(CC) $(CFLAGS) $(INC) -c $^ -o $@
