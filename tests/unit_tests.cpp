@@ -1,6 +1,10 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 #include "dateTime.hpp"
+#include "cashierController.hpp"
+#include "managerController.hpp"
+#include "databaseConnection.hpp"
+#include "mainController.hpp"
 
 TEST_SUITE("DateTime class tests") {
     TEST_CASE("Construct from string") {
@@ -38,4 +42,33 @@ TEST_SUITE("DateTime class tests") {
     }
 }
 
+TEST_SUITE("CashierController class test") {
+    TEST_CASE("Checking no sale open") {
+        DatabaseConnection db = startDatabaseConnection();
+        CashierController cash(db);
+        CHECK(cash.hasOpenSell() == false);
+    }
 
+    TEST_CASE("Checking open sale") {
+        DatabaseConnection db = startDatabaseConnection();
+        CashierController cash(db);
+        cash.openSale();
+        CHECK(cash.hasOpenSell() == true);
+    }
+
+    TEST_CASE("Checking open sale after finished") {
+        DatabaseConnection db = startDatabaseConnection();
+        CashierController cash(db);
+        cash.openSale();
+        cash.finishSale();
+        CHECK(cash.hasOpenSell() == false);
+    }
+
+    TEST_CASE("Checking open sale after cancelled") {
+        DatabaseConnection db = startDatabaseConnection();
+        CashierController cash(db);
+        cash.openSale();
+        cash.cancelSale();
+        CHECK(cash.hasOpenSell() == false);
+    }
+}
