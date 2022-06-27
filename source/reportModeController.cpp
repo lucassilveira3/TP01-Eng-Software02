@@ -18,8 +18,8 @@ vector<vector<string>> ReportModeController::salesOnPeriod(string period_start,
     string sql_statement = db_connection_.prepareStatement(
         "SELECT strftime(\"%Y-%m-%d\", date) AS date, name AS `product name`, SellProducts.amount, price FROM Sells JOIN SellProducts ON Sells.id=sellId JOIN Products ON productId=Products.id WHERE strftime(\"%Y-%m-%d\", date) BETWEEN ? AND ?",
         "ss",
-        period_start,
-        period_end
+        period_start.c_str(),
+        period_end.c_str()
     );
     QueryResults results = db_connection_.execute(sql_statement);
     return process_results(results);
@@ -45,15 +45,16 @@ vector<vector<string>> ReportModeController::process_results(QueryResults& resul
         throw runtime_error("Failed to query sale data from the database!\nError: " + results.status_message());
     }
     int num_rows = results.num_rows(), num_columns = results.num_columns();
+    if(num_rows == 0 || num_columns == 0) {
+        return {};
+    }
     vector<vector<string>> result_table;
     result_table.reserve(num_rows + 1);
     result_table.push_back(results.column_names());
     for(int i = 1; i < num_rows + 1; i++) {
         result_table.emplace_back(num_columns, "");
-        int j = 0;
-        for(auto column : results.rows()[i - 1]) {
-            result_table[i][j] = column.second;
-            j++;
+        for(int j = 0; j < num_columns; j++) {
+            result_table[i][j] = results.rows()[i - 1][result_table[0][j]];
         }
     }
     return result_table;

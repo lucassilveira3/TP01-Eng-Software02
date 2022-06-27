@@ -71,6 +71,7 @@ string centerAlign(const string& str, int width) {
 void prettyPrintTable(const vector<vector<string>>& table) {
     // Treating empty tables and getting the table's dimensions
     if(table.empty()) {
+        cout << endl;
         return;
     }
     int rows = table.size(), columns = table[0].size();
