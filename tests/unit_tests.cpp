@@ -49,36 +49,36 @@ TEST_SUITE("DateTime class tests") {
     }
 }
 
-TEST_SUITE("CashierController class test") {
-    TEST_CASE("Checking no sale open") {
-        DatabaseConnection db = startDatabaseConnection();
-        CashierController cash(db);
-        CHECK(cash.hasOpenSell() == false);
-    }
+// TEST_SUITE("CashierController class test") {
+//     TEST_CASE("Checking no sale open") {
+//         DatabaseConnection db = startDatabaseConnection();
+//         CashierController cash(db);
+//         CHECK(cash.hasOpenSell() == false);
+//     }
 
-    TEST_CASE("Checking open sale") {
-        DatabaseConnection db = startDatabaseConnection();
-        CashierController cash(db);
-        cash.openSale();
-        CHECK(cash.hasOpenSell() == true);
-    }
+//     TEST_CASE("Checking open sale") {
+//         DatabaseConnection db = startDatabaseConnection();
+//         CashierController cash(db);
+//         cash.openSale();
+//         CHECK(cash.hasOpenSell() == true);
+//     }
 
-    TEST_CASE("Checking open sale after finished") {
-        DatabaseConnection db = startDatabaseConnection();
-        CashierController cash(db);
-        cash.openSale();
-        cash.finishSale();
-        CHECK(cash.hasOpenSell() == false);
-    }
+//     TEST_CASE("Checking open sale after finished") {
+//         DatabaseConnection db = startDatabaseConnection();
+//         CashierController cash(db);
+//         cash.openSale();
+//         cash.finishSale();
+//         CHECK(cash.hasOpenSell() == false);
+//     }
 
-    TEST_CASE("Checking open sale after cancelled") {
-        DatabaseConnection db = startDatabaseConnection();
-        CashierController cash(db);
-        cash.openSale();
-        cash.cancelSale();
-        CHECK(cash.hasOpenSell() == false);
-    }
-}
+//     TEST_CASE("Checking open sale after cancelled") {
+//         DatabaseConnection db = startDatabaseConnection();
+//         CashierController cash(db);
+//         cash.openSale();
+//         cash.cancelSale();
+//         CHECK(cash.hasOpenSell() == false);
+//     }
+// }
 
 TEST_SUITE("Inventory struct tests"){
     TEST_CASE("Simple inventory"){
