@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Get Timestamp Action
+      uses: nanzm/get-time-action@v1.1
     - name: make
       run: make
     - name: make unit_tests
